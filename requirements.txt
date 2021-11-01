@@ -1,0 +1,9 @@
+Adafruit-Blinka==6.15.0
+adafruit-circuitpython-rgb-display==3.10.8
+Adafruit-PureIO==1.1.9
+font-roboto==0.0.1
+fonts==0.0.3
+numpy==1.16.2
+Pillow==5.4.1
+RPi.GPIO==0.7.0
+spidev==3.5
