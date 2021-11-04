@@ -50,6 +50,7 @@ COLORS = [
 ]
 index = 0
 
+font_smiley = ImageFont.truetype('./CODE2000.TTF', 32)
 font = ImageFont.truetype(RobotoMedium, 40)
 img = Image.new("RGB", (WIDTH, HEIGHT), 0)
 draw = ImageDraw.Draw(img)
@@ -58,6 +59,7 @@ def show_credits():
     global index
     ROTATION = 270 if FLIP else 90
     draw.rectangle((0, 0, WIDTH, HEIGHT), fill=BLACK)
+    draw.text((int(WIDTH*0.09), int(HEIGHT*0.09)), "¯\_(ツ)_/¯", font=font_smiley, fill=COLORS[index])
     draw.text((int(WIDTH*0.09), int(HEIGHT*0.35)), "promethee", font=font, fill=COLORS[index])
     draw.text((int(WIDTH*0.2), int(HEIGHT*0.6)), "@github", font=font, fill=COLORS[index])
     display.image(img, ROTATION)
