@@ -70,11 +70,16 @@ buttonB = digitalio.DigitalInOut(board.D24)
 buttonA.switch_to_input()
 buttonB.switch_to_input()
 
+paused = False
+
 while True:
-    if buttonB.value and not buttonA.value:
+    if not buttonB.value:
         FLIP = not FLIP
         time.sleep(0.3)
-    if buttonA.value and not buttonB.value:
+    if not buttonA.value:
+        paused = not paused
+        time.sleep(0.3)
+    if not paused:
         index = index + 1 if index < len(COLORS) - 1 else 0
 
     show_credits()
