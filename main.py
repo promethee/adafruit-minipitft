@@ -1,4 +1,6 @@
 # SPDX-License-Identifier: MIT
+# -*- coding: utf-8 -*-
+
 import math
 import os
 import digitalio
@@ -28,7 +30,7 @@ display = st7789.ST7789(
     y_offset=40,
 )
 
-ROTATION = os.environ.get('ROTATION', 90)
+FLIP = os.environ.get('FLIP', False)
 WIDTH = display.height
 HEIGHT = display.width
 BLACK = (0, 0, 0)
@@ -47,22 +49,17 @@ COLORS = [
     (255, 0, 128),
 ]
 index = 0
-BG_MODE = "BG"
-TEXT_MODE = "TEXT"
-NO_MODE = "NONE"
-MODE = TEXT_MODE
 
-font = ImageFont.truetype(RobotoMedium, 42)
+font = ImageFont.truetype(RobotoMedium, 40)
 img = Image.new("RGB", (WIDTH, HEIGHT), 0)
 draw = ImageDraw.Draw(img)
 
 def show_credits():
-    global index, MODE
-    bg_color = (COLORS[index] if MODE == BG_MODE else BLACK)
-    text_color = (COLORS[index] if MODE == TEXT_MODE else BLACK)
-    draw.rectangle((0, 0, WIDTH, HEIGHT), fill=(BLACK if MODE == NO_MODE else bg_color))
-    draw.text((int(WIDTH*0.09), int(HEIGHT*0.2)), "promethee", font=font, fill=(WHITE if MODE == NO_MODE else text_color))
-    draw.text((int(WIDTH*0.2), int(HEIGHT*0.6)), "@github", font=font, fill=(WHITE if MODE == NO_MODE else text_color))
+    global index
+    ROTATION = 270 if FLIP else 90
+    draw.rectangle((0, 0, WIDTH, HEIGHT), fill=BLACK)
+    draw.text((int(WIDTH*0.09), int(HEIGHT*0.35)), "promethee", font=font, fill=COLORS[index])
+    draw.text((int(WIDTH*0.2), int(HEIGHT*0.6)), "@github", font=font, fill=COLORS[index])
     display.image(img, ROTATION)
 
 backlight = digitalio.DigitalInOut(board.D22)
@@ -75,11 +72,9 @@ buttonB.switch_to_input()
 
 while True:
     if buttonB.value and not buttonA.value:
-        MODE = TEXT_MODE
+        FLIP = not FLIP
+        time.sleep(0.3)
     if buttonA.value and not buttonB.value:
-        MODE = BG_MODE
-    elif not buttonA.value and not buttonB.value:
-        MODE = NO_MODE
+        index = index + 1 if index < len(COLORS) - 1 else 0
 
     show_credits()
-    index = index + 1 if index < len(COLORS) - 1 else 0
